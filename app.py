@@ -1,4 +1,3 @@
-cat > app.py << 'EOF'
 import os
 from dotenv import load_dotenv
 import streamlit as st
@@ -14,7 +13,7 @@ Your task: Based on the user's preferences below, recommend ONE specific wine th
 USER PREFERENCES:
 • Food pairing: {food_type}
 • Budget: {budget}
-• Other preferences: {preferences if preferences else "None specified"}
+• Other preferences: {preferences}
 
 RECOMMENDATION REQUIREMENTS:
 1. Wine name and region (be specific: "2019 Cloudy Bay Sauvignon Blanc, Marlborough, New Zealand")
@@ -45,11 +44,14 @@ if submit_button:
     if not food_type:
         st.error("Please tell me what food you're pairing with!")
     else:
+        # Handle empty preferences
+        preferences_text = preferences if preferences else "None specified"
+        
         # Use the prompt template
         prompt = WINE_RECOMMENDATION_PROMPT.format(
             food_type=food_type,
             budget=budget,
-            preferences=preferences
+            preferences=preferences_text
         )
         
         try:
@@ -65,4 +67,3 @@ if submit_button:
                 st.write(recommendation)
         except Exception as e:
             st.error(f"Error getting recommendation: {e}")
-EOF
